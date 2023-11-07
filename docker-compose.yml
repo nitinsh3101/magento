@@ -1,0 +1,39 @@
+version: '3.3'
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: magentodb
+      MYSQL_USER: magento
+      MYSQL_PASSWORD: magento
+    volumes:
+      - /drive/magento/magento_db:/var/lib/mysql
+    networks:
+      - magento-network
+
+  elasticsearch:
+    image: elasticsearch:7.17.9
+    container_name: elasticsearch
+    environment:
+      - node.name=elasticsearch-node
+      - cluster.name=elasticsearch
+      - discovery.type=single-node
+    networks:
+      - magento-network
+  
+  magento:
+    build: .
+    container_name: magento-nginx
+    #command: " sleep infinity "
+    command: "./connect-db-magento.sh"
+    ports:
+      - "80:80"
+    networks:
+      - magento-network
+
+networks:
+  magento-network:
+
