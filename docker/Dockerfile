@@ -4,3 +4,4 @@ RUN sh setup-magento.sh
 COPY default /etc/nginx/sites-available/default
 WORKDIR /var/www/html/magento
 COPY connect-db-magento.sh .
+RUN chmod +x connect-db-magento.sh

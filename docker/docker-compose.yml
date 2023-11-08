@@ -1,5 +1,4 @@
 version: '3.3'
-
 services:
   mysql:
     image: mysql:5.7
@@ -36,4 +35,3 @@ services:
 
 networks:
   magento-network:
-

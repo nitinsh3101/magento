@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: magento
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: magento
+  template:
+    metadata:
+      labels:
+        app: magento
+    spec:
+      containers:
+        - name: magento
+          image: us-central1-docker.pkg.dev/nitin-project-gcp/magento/magento
+          imagePullPolicy: Always
+          command: ["sh", "-c"]
+          args: 
+          - |
+            cp /configmap/connect-db.sh .
+            chmod +x ./connect-db.sh
+            ./connect-db.sh
+          ports:
+          - containerPort: 80
+            name: web
+          volumeMounts:
+          #- mountPath: "/var/www/html/magento"
+          #  name: magento-data
+          - mountPath: "/configmap"
+            name: configmap-script
+      volumes:
+      #- name: magento-data
+      #  persistentVolumeClaim:
+      #    claimName: magento-data-pvc
+      - name: configmap-script
+        configMap:
+          name: magento-configmap
